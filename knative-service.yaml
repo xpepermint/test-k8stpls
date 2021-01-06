@@ -1,20 +1,42 @@
-apiVersion: serving.knative.dev/v1
-kind: Service
+# apiVersion: serving.knative.dev/v1
+# kind: Service
+# metadata:
+#   name: sampleapp
+#   namespace: default
+# spec:
+#   template:
+#     metadata:
+#       annotations:
+#         autoscaling.knative.dev/class: kpa.autoscaling.knative.dev
+#         autoscaling.knative.dev/metric: concurrency
+#         autoscaling.knative.dev/target: "10"
+#         autoscaling.knative.dev/minScale: "1"
+#         autoscaling.knative.dev/maxScale: "100"
+#     spec:
+#       containers:
+#       - image: __IMAGE__
+#         env:
+#         - name: TARGET
+#           value: "Node Sample v1"
+
+apiVersion: apps/v1
+kind: Deployment
 metadata:
-  name: sampleapp
-  namespace: default
+  name: nginx-deployment
+  labels:
+    app: nginx
 spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: nginx
   template:
     metadata:
-      annotations:
-        autoscaling.knative.dev/class: kpa.autoscaling.knative.dev
-        autoscaling.knative.dev/metric: concurrency
-        autoscaling.knative.dev/target: "10"
-        autoscaling.knative.dev/minScale: "1"
-        autoscaling.knative.dev/maxScale: "100"
+      labels:
+        app: nginx
     spec:
       containers:
-      - image: __IMAGE__
-        env:
-        - name: TARGET
-          value: "Node Sample v1"
+      - name: nginx
+        image: nginx:1.14.2
+        ports:
+        - containerPort: 80
